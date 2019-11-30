@@ -1,6 +1,6 @@
 {
   "name": "todo-ui",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Todo App",
   "productName": "A Simple Todo App",
   "cordovaId": "com.redhat.demos.quarkus.todo",
@@ -40,7 +40,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "^5.0.0",
-    "quarkus-todo-client": "file:../../../target/generated-sources/client",
+    "todo-api-client": "1.0.1-SNAPSHOT.201911301240",
     "typescript": "^3.3.3"
   },
   "engines": {

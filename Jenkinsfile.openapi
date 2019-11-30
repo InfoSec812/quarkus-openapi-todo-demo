@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    pod-template: npm-with-credentials
+    label "maven-with-credentials"
 spec:
   serviceAccout: jenkins
   serviceAcountName: jenkins
@@ -67,7 +67,7 @@ spec:
             mkdir -p ~/.m2
             cat /tmp/mvn-config/settings.xml >> ~/.m2/settings.xml
             ./mvnw frontend:install-node-and-npm@node-npm-init
-            ./mvnw openapi-generator:generate@api-client-sources
+            ./mvnw openapi-generator:generate@api-client-sources -Dclient.npm.registry=http://nexus:8081/repository/npm-all/
             ./mvnw frontend:npm@install-client-deps
             ./mvnw frontend:npm@transpile-api-client
         """
@@ -76,6 +76,7 @@ spec:
     stage("Publish JavaScript/TypeScript API Client SDK") {
       steps {
         sh """
+            printf "node_modules\n" >> target/generated-sources/client/.npmignore
             ./mvnw frontend:npm@publish-api-client -Dclient.npm.registry='http://nexus:8081/repository/npm-all/
         """
       }

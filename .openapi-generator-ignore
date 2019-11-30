@@ -28,5 +28,6 @@ target/**/LocalDateProvider.java
 target/**/ApiOriginFilter.java
 target/**/OffsetDateTimeProvider.java
 target/**/RestApplication.java
+target/**/WEB-INF/**/*
 
 src/main/resources/**/*

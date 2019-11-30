@@ -78,7 +78,7 @@
 </style>
 
 <script>
-import { DefaultApi } from 'quarkus-todo-client';
+import { DefaultApi } from 'todo-api-client';
 
 const apiBaseUrl = window.location.protocol + '//' + window.location.host;
 // const apiBaseUrl = window.location.protocol + '//localhost:8080';

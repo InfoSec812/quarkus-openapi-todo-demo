@@ -40,3 +40,7 @@ settings.gradle
 
 src/gen
 src/gen/**
+
+
+## Ignore generated frontend code
+src/main/resources/META-INF/resources/**/*

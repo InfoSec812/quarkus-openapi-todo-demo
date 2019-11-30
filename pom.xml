@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.redhat.demos.quarkus.openapi.todo</groupId>
     <artifactId>todo-api</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -25,6 +25,16 @@
         <nodejs.version>v10.15.3</nodejs.version>
         <client.npm.registry>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/npm-all/</client.npm.registry>
     </properties>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -62,6 +72,11 @@
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
         <dependency>
+            <groupId>${groupId}</groupId>
+            <artifactId>${artifactId}-server</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.23</version>
@@ -96,16 +111,16 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>none</phase>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi.yml</inputSpec>
                             <generatorName>typescript-axios</generatorName>
                             <configOptions>
                                 <allowUnicodeIdentifiers>true</allowUnicodeIdentifiers>
                                 <supportES6>true</supportES6>
-                                <npmName>quarkus-todo-client</npmName>
+                                <npmName>${artifactId}-client</npmName>
                                 <npmVersion>${api.version}</npmVersion>
-                                <snapshot>false</snapshot>
+                                <snapshot>true</snapshot>
                                 <npmRepository>${client.npm.registry}</npmRepository>
                             </configOptions>
                             <output>${client.sdk.output}</output>
@@ -120,7 +135,7 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>none</phase>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi.yml</inputSpec>
                             <generatorName>jaxrs-resteasy</generatorName>
@@ -132,7 +147,7 @@
                                 <removeOperationIdPrefix>true</removeOperationIdPrefix>
                             </configOptions>
                             <templateDirectory>${project.basedir}/gen_templates</templateDirectory>
-                            <addCompileSourceRoot>true</addCompileSourceRoot>
+                            <addCompileSourceRoot>false</addCompileSourceRoot>
                             <output>${server.stubs.output}</output>
                             <modelPackage>com.redhat.demos.quarkus.openapi.todo.models</modelPackage>
                             <apiPackage>com.redhat.demos.quarkus.openapi.todo.api</apiPackage>
@@ -180,7 +195,7 @@
                     <!-- Build the API Client SDK -->
                     <execution>
                         <id>install-client-deps</id>
-                        <phase>generate-sources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
@@ -193,7 +208,7 @@
                     <!-- Build the API Client SDK -->
                     <execution>
                         <id>transpile-api-client</id>
-                        <phase>process-sources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
