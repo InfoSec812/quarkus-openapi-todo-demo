@@ -1,0 +1,96 @@
+library identifier: "pipeline-library@v1.4",
+retriever: modernSCM(
+  [
+    $class: "GitSCMSource",
+    remote: "https://github.com/redhat-cop/pipeline-library.git"
+  ]
+)
+
+openshift.withCluster() {
+  env.APP_NAME = "${JOB_NAME}".replaceAll(/-ci-cd.*/, '')
+  env.BUILD = openshift.project()
+  echo "Starting Pipeline for ${APP_NAME}..."
+}
+
+pipeline {
+  // Use Jenkins Maven slave
+  // Jenkins will dynamically provision this as OpenShift Pod
+  // All the stages and steps of this Pipeline will be executed on this Pod
+  // After Pipeline completes the Pod is killed so every run will have clean
+  // workspace
+agent {
+    kubernetes {
+      cloud 'openshift'
+      defaultContainer 'jnlp'
+      label "npm-with-credentials"
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    pod-template: npm-with-credentials
+spec:
+  serviceAccout: jenkins
+  serviceAcountName: jenkins
+  containers:
+  - name: jnlp
+    image: image-registry.openshift-image-registry.svc:5000/${env.BUILD}/jenkins-slave-npm
+    tty: true
+    alwaysPull: true
+    workingDir: /tmp
+    env:
+    - name: OPENSHIFT_JENKINS_JVM_ARCH
+      value: x86_64
+    volumeMounts:
+    - name: npmrc
+      mountPath: /tmp/npm-config
+      readOnly: true
+    - name: mvn-config
+      mountPath: /tmp/mvn-config
+      readOnly: true
+  volumes:
+  - name: npmrc
+    secret:
+      secretName: npm-registry-credentials
+  - name: mvn-config
+    secret:
+      secretName: maven-nexus-settings
+      """
+    }
+  }
+
+  stages {
+    stage("Generate JavaScript/TypeScript API Client SDK") {
+      steps {
+        sh """
+            cat /tmp/npm-config/.npmrc >> ~/.npmrc
+            mkdir -p ~/.m2
+            cat /tmp/mvn-config/settings.xml >> ~/.m2/settings.xml
+            ./mvnw frontend:install-node-and-npm@node-npm-init
+            ./mvnw openapi-generator:generate@api-client-sources
+            ./mvnw frontend:npm@install-client-deps
+            ./mvnw frontend:npm@transpile-api-client
+        """
+      }
+    }
+    stage("Publish JavaScript/TypeScript API Client SDK") {
+      steps {
+        sh """
+            ./mvnw frontend:npm@publish-api-client -Dclient.npm.registry='http://nexus:8081/repository/npm-all/
+        """
+      }
+    }
+    stage("Generate RestEasy Server Stubs") {
+      steps {
+        sh "./mvnw openapi-generator:generate@resteasy-api -Dserver.supporting.files=true"
+      }
+    }
+    stage("Publish RestEasy Server Stubs") {
+      steps {
+        dir("target/generated-sources/server/") {
+          sh "../../../mvnw clean package publish"
+        }
+      }
+    }
+  }
+}

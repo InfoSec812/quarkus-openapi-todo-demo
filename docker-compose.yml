@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  db:
+    image: registry.redhat.io/rhel8/postgresql-10
+    hostname: psql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRESQL_USER: todouser
+      POSTGRESQL_PASSWORD: todouser
+      POSTGRESQL_DATABASE: todo
