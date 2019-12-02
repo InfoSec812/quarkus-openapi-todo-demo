@@ -29,5 +29,12 @@ target/**/ApiOriginFilter.java
 target/**/OffsetDateTimeProvider.java
 target/**/RestApplication.java
 target/**/WEB-INF/**/*
+target/**/pom.xml
+target/**/build.gradle
+target/**/README.md
+target/**/settings.gradle
+target/**/.openapi-generator-ignore
+target/**/StringUtil.java
+target/**/src/main/**/*
 
 src/main/resources/**/*
