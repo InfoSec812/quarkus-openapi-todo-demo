@@ -94,7 +94,6 @@ export default {
     // When first starting, the application needs to load the initial data from the
     // server. This uses the loading indicator and the generated Axios client SDK
     // to load the data while showing the user a loading indicator
-    this.$q.loading.show();
     this.$q.notify('Initial data loading is not yet implemented');
   },
   methods: {
