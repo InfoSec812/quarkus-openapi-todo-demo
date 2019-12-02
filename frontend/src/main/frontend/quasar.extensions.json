@@ -1,0 +1,26 @@
+{
+  "@quasar/testing": {
+    "harnesses": [
+      "unit-jest",
+      "e2e-webdriver",
+      "security"
+    ]
+  },
+  "@quasar/testing-e2e-webdriver": {
+    "options": [
+      "scripts"
+    ]
+  },
+  "@quasar/testing-security": {
+    "options": [
+      "zap_local"
+    ],
+    "zapbrowser": "Chrome"
+  },
+  "@quasar/typescript": {
+    "webpack": "plugin",
+    "rename": false,
+    "vscode": false,
+    "prettier": true
+  }
+}
