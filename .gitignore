@@ -44,3 +44,4 @@ src/gen/**
 
 ## Ignore generated frontend code
 src/main/resources/META-INF/resources/**/*
+src/main/frontend/node
