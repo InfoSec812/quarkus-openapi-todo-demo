@@ -41,8 +41,9 @@
           <q-card v-for="(todo, index) in todos" :key="todo.id" style="width: 100%;" bordered
                   class="q-pa-none q-my-sm row">
             <div class="col">
-              <q-card-section class="title-section" :class="{ completed: todo.complete }">
-                <q-input borderless @change="updateTodo(index)" v-model="todos[index].title" :input-style="{ fontSize: '1.6em', fontWeight: 'bold' }"></q-input>
+              <q-card-section class="title-section row" :class="{ completed: todo.complete }">
+                <q-input class="col-grow" borderless @change="updateTodo(index)" v-model="todos[index].title" :input-style="{ fontSize: '1.6em', fontWeight: 'bold' }"></q-input>
+                <q-icon name="delete" @click="deleteTodo(index)"></q-icon>
               </q-card-section>
               <q-card-section class="row">
                 <q-input borderless @change="updateTodo(index)" :class="{ completed: todo.complete }" v-model="todos[index].description" class="col-grow q-mr-xl"></q-input>
@@ -110,6 +111,16 @@ export default {
       })
   },
   methods: {
+    // Given the index of an item to be deleted, make an API call to delete that ToDo
+    deleteTodo: function(index) {
+      apiClient.deleteTodo(this.$data.todos[index].id)
+        .then(res => {
+          this.$data.todos.splice(index, 1);
+        })
+        .catch(err => {
+          this.$q.notify('An error occurred when attempting to delete todo: ' + JSON.stringify(err));
+        })
+    },
     // Whenever a change is made to the data, this method is run to updated the
     // persisted data on the server
     updateTodo: function(index) {
