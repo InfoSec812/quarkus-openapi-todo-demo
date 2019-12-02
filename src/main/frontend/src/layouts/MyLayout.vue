@@ -95,13 +95,10 @@ export default {
       dateMask: 'YYYY-MM-DDTHH:mmZ'
     };
   },
-  filters: {
-    dateFilter: function (input) {
-      let parsed = new Date(input);
-      return parsed;
-    }
-  },
   mounted() {
+    // When first starting, the application needs to load the initial data from the
+    // server. This uses the loading indicator and the generated Axios client SDK
+    // to load the data while showing the user a loading indicator
     this.$q.loading.show();
     apiClient.gettodos()
       .then(res => {
@@ -113,6 +110,8 @@ export default {
       })
   },
   methods: {
+    // Whenever a change is made to the data, this method is run to updated the
+    // persisted data on the server
     updateTodo: function(index) {
       const updated = this.$data.todos[index];
       apiClient.updateTodo(updated.id, updated)
@@ -120,6 +119,8 @@ export default {
           this.$q.notify('An error occurred updating the todo: ' + err);
         });
     },
+    // When a new ToDo is submitted, this method is called to persist the ToDo
+    // object to the server
     addTodo: function () {
       apiClient.createTodo(this.$data.newTodo)
         .then(res => {
@@ -131,11 +132,14 @@ export default {
           this.$q.notify('An error occurred saving the todo: ' + err);
         })
     },
+    // A method to show or hide the new ToDo form
     toggleTodoForm: function () {
       this.$data.showForm = !this.$data.showForm;
     }
   },
   computed: {
+    // The computed icon to be shown in the top-right of the UI depending on if
+    // the user is viewing the form or the list
     formIcon: function () {
       return this.$data.showForm ? 'chevron_left' : 'add';
     }
