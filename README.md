@@ -8,17 +8,14 @@ This is an example of building a OpenAPI-enabled JAX-RS server.
 This example uses the [JAX-RS](https://jax-rs-spec.java.net/) framework.
 RESTEasy is used as JAX-RS implementation library and is defined as dependency.
 
-To run the server, please execute the following:
+To run the server **WITH** the UI, please execute the following:
 
-```
-mvn -Djetty.http.port=8080 package org.eclipse.jetty:jetty-maven-plugin:run
-```
-
-You can then view the OpenAPI v2 specification here:
-
-```
-http://localhost:8080/swagger.json
+```bash
+mvn clean compile quarkus:dev
 ```
 
-Note that if you have configured the `host` to be something other than localhost, the calls through
-swagger-ui will be directed to that host and not localhost!
+To run the server **WITHOUT** the UI, please execute the following:
+
+```bash
+./mvnw clean compile quarkus:dev -Pquarkus-test-only
+```
