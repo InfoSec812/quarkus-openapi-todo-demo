@@ -1,3 +1,0 @@
-INSERT INTO todo (id, title, description, complete, created, dueDate) VALUES (NEXTVAL('hibernate_sequence'), 'Test ToDo 1', 'The first test todo', false, now(), NULL);
-INSERT INTO todo (id, title, description, complete, created, dueDate) VALUES (NEXTVAL('hibernate_sequence'), 'Test ToDo 2', 'The second test todo', true, now(), NULL);
-INSERT INTO todo (id, title, description, complete, created, dueDate) VALUES (NEXTVAL('hibernate_sequence'), 'Test ToDo 3', 'The third test todo', false, now(), NULL);
