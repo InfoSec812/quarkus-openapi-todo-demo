@@ -23,7 +23,8 @@
         <server.supporting.files>true</server.supporting.files>
         <api.version>${project.version}</api.version>
         <nodejs.version>v10.15.3</nodejs.version>
-        <client.npm.registry>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/npm-all/</client.npm.registry>
+        <client.npm.registry>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/npm-all/
+        </client.npm.registry>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -320,6 +321,54 @@
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>local-build</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openapitools</groupId>
+                        <artifactId>openapi-generator-maven-plugin</artifactId>
+                        <version>4.2.1</version>
+                        <executions>
+                            <!-- Generate API Client SDK from OpenAPI Spec -->
+                            <execution>
+                                <id>api-client-sources</id>
+                                <phase>initialize</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.8.0</version>
+                        <executions>
+                            <!-- Build the API Client SDK -->
+                            <execution>
+                                <id>install-client-deps</id>
+                                <phase>generate-sources</phase>
+                            </execution>
+                            <!-- Build the API Client SDK -->
+                            <execution>
+                                <id>transpile-api-client</id>
+                                <phase>process-sources</phase>
+                            </execution>
+                            <execution>
+                                <id>add-api-client-to-frontend</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>install --save-dev ${client.sdk.output}</arguments>
+                                    <installDirectory>${project.basedir}/src/main/frontend</installDirectory>
+                                    <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>native</id>
             <activation>
