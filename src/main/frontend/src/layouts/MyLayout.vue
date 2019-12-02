@@ -79,12 +79,6 @@
 </style>
 
 <script>
-import { DefaultApi } from 'todo-api-client';
-
-const apiBaseUrl = window.location.protocol + '//' + window.location.host;
-// const apiBaseUrl = window.location.protocol + '//localhost:8080';
-const apiClient = new DefaultApi(null, apiBaseUrl);
-
 export default {
   name: 'MyLayout',
 
@@ -101,47 +95,22 @@ export default {
     // server. This uses the loading indicator and the generated Axios client SDK
     // to load the data while showing the user a loading indicator
     this.$q.loading.show();
-    apiClient.gettodos()
-      .then(res => {
-        this.$data.todos = res.data;
-        this.$q.loading.hide();
-      }).catch(err => {
-        this.$q.loading.hide();
-        this.$q.notify('An error occurred loading data from the server: ' + err);
-      })
+    this.$q.notify('Initial data loading is not yet implemented');
   },
   methods: {
     // Given the index of an item to be deleted, make an API call to delete that ToDo
     deleteTodo: function(index) {
-      apiClient.deleteTodo(this.$data.todos[index].id)
-        .then(res => {
-          this.$data.todos.splice(index, 1);
-        })
-        .catch(err => {
-          this.$q.notify('An error occurred when attempting to delete todo: ' + JSON.stringify(err));
-        })
+      this.$q.notify('Not implemented');
     },
     // Whenever a change is made to the data, this method is run to updated the
     // persisted data on the server
     updateTodo: function(index) {
-      const updated = this.$data.todos[index];
-      apiClient.updateTodo(updated.id, updated)
-        .catch(err => {
-          this.$q.notify('An error occurred updating the todo: ' + err);
-        });
+      this.$q.notify('Not implemented');
     },
     // When a new ToDo is submitted, this method is called to persist the ToDo
     // object to the server
     addTodo: function () {
-      apiClient.createTodo(this.$data.newTodo)
-        .then(res => {
-          this.$data.todos.push(res.data);
-          this.$data.newTodo = {title: '', description: '', complete: false, dueDate: null};
-          this.$data.showForm = false;
-        })
-        .catch(err => {
-          this.$q.notify('An error occurred saving the todo: ' + err);
-        })
+      this.$q.notify('Not implemented');
     },
     // A method to show or hide the new ToDo form
     toggleTodoForm: function () {
