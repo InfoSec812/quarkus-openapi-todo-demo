@@ -10,9 +10,6 @@
     <artifactId>todo-jsclient</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <nodejs.version>v10.15.3</nodejs.version>
-        <npm.registry>https://nexus-app-dev-ci-cd.apps.shared-dev.dev.openshift.opentlc.com/repository/npm-all/
-        </npm.registry>
         <client.sdk.output>${project.build.directory}/generated-sources/client</client.sdk.output>
     </properties>
     <build>
@@ -41,14 +38,14 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>none</phase>
                         <configuration>
                             <inputSpec>${project.basedir}/../openapi.yml</inputSpec>
                             <generatorName>typescript-axios</generatorName>
                             <configOptions>
                                 <allowUnicodeIdentifiers>true</allowUnicodeIdentifiers>
                                 <supportES6>true</supportES6>
-                                <npmName>${artifactId}-client</npmName>
+                                <npmName>${artifactId}</npmName>
                                 <npmVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</npmVersion>
                                 <snapshot>true</snapshot>
                                 <npmRepository>${npm.registry}</npmRepository>
@@ -64,36 +61,14 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-to-output-directory</id>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/generated-sources/client</directory>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.8.0</version>
                 <executions>
                     <!-- Install NodeJS & NPM -->
                     <execution>
-                        <id>node-npm-init</id>
-                        <phase>initialize</phase>
+                        <id>installNode</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
@@ -105,8 +80,8 @@
                     </execution>
                     <!-- Build the API Client SDK -->
                     <execution>
-                        <id>install-client-deps</id>
-                        <phase>process-sources</phase>
+                        <id>install-deps</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
@@ -119,7 +94,7 @@
                     <!-- Build the API Client SDK -->
                     <execution>
                         <id>transpile-api-client</id>
-                        <phase>process-resources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
