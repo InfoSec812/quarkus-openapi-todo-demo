@@ -37,6 +37,12 @@
                         <fileset>
                             <directory>src/main/frontend/node_modules</directory>
                         </fileset>
+                        <fileset>
+                            <directory>src/main/frontend</directory>
+                            <includes>
+                                <include>package-lock.json</include>
+                            </includes>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
