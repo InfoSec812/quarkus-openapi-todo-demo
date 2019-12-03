@@ -94,22 +94,22 @@ export default {
     // When first starting, the application needs to load the initial data from the
     // server. This uses the loading indicator and the generated Axios client SDK
     // to load the data while showing the user a loading indicator
-    this.$q.notify('Initial data loading is not yet implemented');
+    this.$q.notify("Initial data load not yet implemented");
   },
   methods: {
     // Given the index of an item to be deleted, make an API call to delete that ToDo
     deleteTodo: function(index) {
-      this.$q.notify('Not implemented');
+      this.$q.notify("Delete is not yet implemented");
     },
     // Whenever a change is made to the data, this method is run to updated the
     // persisted data on the server
     updateTodo: function(index) {
-      this.$q.notify('Not implemented');
+      this.$q.notify("Update is not yet implemented");
     },
     // When a new ToDo is submitted, this method is called to persist the ToDo
     // object to the server
     addTodo: function () {
-      this.$q.notify('Not implemented');
+      this.$q.notify("Add is not yet implemented");
     },
     // A method to show or hide the new ToDo form
     toggleTodoForm: function () {
