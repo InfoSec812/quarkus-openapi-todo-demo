@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  title: ToDo
+  title: Juggl Todo
   version: 1.0.0
 paths:
   /todos:
@@ -78,8 +78,7 @@ paths:
         name: todoId
         description: A unique identifier for a `Todo`.
         schema:
-          type: integer
-          format: int64
+          type: string
         in: path
         required: true
 components:
@@ -93,18 +92,13 @@ components:
           type: string
         description:
           type: string
+        complete:
+          type: boolean
         dueDate:
           format: date-time
           type: string
-        complete:
-          type: boolean
-        created:
-          format: date-time
-          type: string
       example:
-        title: Something I need to do
-        description: A long description
-        dueDate: '2019-09-14T09:00:00.000Z'
+        title: My title
+        description: My description
         complete: false
-        created: '2019-09-27T14:00:00.000Z'
-        id: 1
+        dueDate: '2019-12-22T09:00:00Z'
