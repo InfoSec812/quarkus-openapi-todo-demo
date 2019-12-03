@@ -13,13 +13,6 @@
         <api.version>${parent.version}</api.version>
         <vue.source>${project.basedir}/src/main/frontend</vue.source>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>todo-jsclient</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -36,14 +29,26 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/frontend/node_modules</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.8.0</version>
                 <executions>
                     <!-- Install NodeJS & NPM -->
                     <execution>
-                        <id>node-npm-init</id>
-                        <phase>initialize</phase>
+                        <id>installNode</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
@@ -56,7 +61,7 @@
                     <!-- Set version on frontend NodeJS project -->
                     <execution>
                         <id>set-version</id>
-                        <phase>generate-resources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
@@ -69,27 +74,27 @@
                     <!-- Install the API Client dependencies -->
                     <execution>
                         <id>2-npm-install</id>
-                        <phase>process-sources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
                             <installDirectory>${project.parent.basedir}</installDirectory>
-                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
                         </configuration>
                     </execution>
                     <!-- Install the API Client dependencies -->
                     <execution>
                         <id>3-npm-install-client-sdk</id>
-                        <phase>process-resources</phase>
+                        <phase>none</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --save-dev ../../../../jsclient/target/classes/</arguments>
+                            <arguments>install --save-dev ${project.parent.basedir}/jsclient/target/generated-sources/client/</arguments>
                             <installDirectory>${project.parent.basedir}</installDirectory>
-                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
                         </configuration>
                     </execution>
                     <!-- Build the single-page webapp for the frontend -->
@@ -98,10 +103,10 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <phase>compile</phase>
+                        <phase>none</phase>
                         <configuration>
                             <installDirectory>${project.parent.basedir}</installDirectory>
-                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
@@ -111,10 +116,10 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <phase>test</phase>
+                        <phase>none</phase>
                         <configuration>
                             <installDirectory>${project.parent.basedir}</installDirectory>
-                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
                             <arguments>run test</arguments>
                         </configuration>
                     </execution>
