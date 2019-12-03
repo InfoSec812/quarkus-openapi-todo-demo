@@ -147,3 +147,12 @@ That's it! We've created our API Specification!!
    
 ### Method 2: Using OpenAPI Generator and Custom Templates (This Project)
 
+1. Clone this project locally: `git clone https://github.com/InfoSec812/quarkus-openapi-todo-demo.git`
+1. Follow the steps from above about creating the OpenAPI specification using Apicur.io, but do not use the *Generate Project* option inside of Apicur.io
+1. Save the OpenAPI specification in the root of this project as `openapi.yml`
+   * |**WARNING**: *This Is NOT An Appropriate Solution* |
+     |---|
+     | Running this in a Maven multimodule project was done to simplify performing the demo, but is not a good solution for real-world development| 
+     | For real-world development, each of these modules should be handled by a pipeline and publish their artifacts to a repository|
+1. 
+
