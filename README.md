@@ -291,6 +291,6 @@ That's it! We've created our API Specification!!
 1. Let Quarkus know that we are including components from external libraries by using an empty `beans.xml` file in `implementation/src/main/resources/META-INF/beans.xml`
 1. Build the completed application using `4-build-implementation.sh`
    * This actually runs:
-     * `./mvnw -pl frontend frontend:npm@quasar-build`
-     * `./mvnw -pl implementation,server clean package -DskipTests quarkus:dev`
+     * `./mvnw -pl implementation,server clean package -DskipTests`
+     * `java -jar implementation/target/todo-implementation-1.0.0-SNAPSHOT-runner.jar`
 1. Open a browser to http://localhost:8080/
