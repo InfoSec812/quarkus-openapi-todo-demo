@@ -62,7 +62,7 @@ module.exports = function (ctx) {
       // analyze: true,
       // preloadChunks: false,
       // extractCSS: false,
-      distDir: '../../../target/classes/META-INF/resources',
+      distDir: '../resources/META-INF/resources',
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {

@@ -40,7 +40,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "^5.0.0",
-    "todo-jsclient-client": "file:../../../../jsclient/target/classes",
+    "todo-jsclient": "file:../../../../jsclient/target/generated-sources/client",
     "typescript": "^3.3.3"
   },
   "engines": {

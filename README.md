@@ -154,5 +154,140 @@ That's it! We've created our API Specification!!
      |---|
      | Running this in a Maven multimodule project was done to simplify performing the demo, but is not a good solution for real-world development| 
      | For real-world development, each of these modules should be handled by a pipeline and publish their artifacts to a repository|
-1. 
-
+1. Using the scripts in the root of the project, we will execute some Maven goals to help us create our application
+1. Generate the JavaScript/TypeScript client SDK using the script `1-build-js-client.sh`
+   * This actually runs `./mvnw -pl jsclient clean build-helper:parse-version frontend:install-node-and-npm@installNode openapi-generator:generate@api-client-sources frontend:npm@install-deps frontend:npm@transpile-api-client`
+1. Install the client SDK into the frontend VueJS application using the script `2-install-client-for-frontend`
+   * This actually runs `./mvnw -pl frontend clean frontend:install-node-and-npm@installNode build-helper:parse-version frontend:npm@set-version frontend:npm@2-npm-install frontend:npm@3-npm-install-client-sdk`
+1. Implement the client SDK in the VueJS application:
+   * ```javascript
+     import { DefaultApi } from 'todo-jsclient';
+     
+     const apiClient = new DefaultApi(null, "http://localhost:8080");
+     
+     // ...SNIP...
+     
+       mounted() {
+         // When first starting, the application needs to load the initial data from the
+         // server. This uses the loading indicator and the generated Axios client SDK
+         // to load the data while showing the user a loading indicator
+         this.$q.loading.show();
+         apiClient.gettodos()
+           .then(res => {
+             this.$data.todos = res.data;
+             this.$q.loading.hide();
+           }).catch(err => {
+             this.$q.loading.hide()
+             this.$q.notify("An error occurred while loading data from the server: " + JSON.stringify(err));
+           })
+       },
+       methods: {
+         // Given the index of an item to be deleted, make an API call to delete that ToDo
+         deleteTodo: function(index) {
+           apiClient.deleteTodo(this.$data.todos[index].id)
+             .catch(err => {
+               this.$q.notify("An error occurred while deleting the Todo: " + JSON.stringify(err));
+             })
+         },
+         // Whenever a change is made to the data, this method is run to updated the
+         // persisted data on the server
+         updateTodo: function(index) {
+           apiClient.updateTodo(this.$data.todos[index].id, this.$data.todos[index])
+             .catch(err => {
+               this.$q.notify("An error occurred while updating the Todo: " + JSON.stringify(err));
+             })
+         },
+         // When a new ToDo is submitted, this method is called to persist the ToDo
+         // object to the server
+         addTodo: function () {
+           apiClient.createTodo(this.$data.newTodo)
+             .then(res => {
+               this.$data.todos.push(res.data);
+             })
+             .catch(err => {
+               this.$q.notify("An error occurred while adding Todo: " + JSON.stringify(err));
+             })
+         },
+         // A method to show or hide the new ToDo form
+         toggleTodoForm: function () {
+           this.$data.showForm = !this.$data.showForm;
+         }
+       }
+     // ...SNIP...
+     ```
+     * This client SDK is implemented in TypeScript and uses Axios (Promises-based Async API) to make the REST API calls with a very simple implementation workflow for the developer.
+1. Transpile the frontend using `3-build-frontend.sh`
+   * This actually runs `./mvnw -pl frontend frontend:npm@quasar-build`
+1. Implement the server stubs inside of the `implementation` project.
+   * Create a new class `TodosApiServiceImpl.java` which implements the `TodosApiService` interface which was generated for us
+   * The implementation of the class looks like:
+     ```java
+     package com.redhat.quarkus.demo.todo;
+     
+     import com.redhat.demos.quarkus.openapi.todo.api.NotFoundException;
+     import com.redhat.demos.quarkus.openapi.todo.api.TodosApiService;
+     import com.redhat.demos.quarkus.openapi.todo.models.Todo;
+     
+     import javax.enterprise.context.RequestScoped;
+     import javax.transaction.Transactional;
+     import javax.ws.rs.core.Response;
+     import javax.ws.rs.core.SecurityContext;
+     
+     @RequestScoped
+     public class TodosApiServiceImpl implements TodosApiService {
+       @Override
+       @Transactional
+       public Response createTodo(Todo todo, SecurityContext securityContext) throws NotFoundException {
+         Todo.persist(todo);
+         todo.flush();
+         return Response.ok(todo).build();
+       }
+     
+       @Override
+       @Transactional
+       public Response deleteTodo(String todoId, SecurityContext securityContext) throws NotFoundException {
+         Todo.findById(todoId).delete();
+         return Response.noContent().build();
+       }
+     
+       @Override
+       public Response getTodo(String todoId, SecurityContext securityContext) throws NotFoundException {
+         return Response.ok(Todo.findById(todoId)).build();
+       }
+     
+       @Override
+       public Response gettodos(SecurityContext securityContext) throws NotFoundException {
+         return Response.ok(Todo.listAll()).build();
+       }
+     
+       @Override
+       @Transactional
+       public Response updateTodo(String todoId, Todo todo, SecurityContext securityContext) throws NotFoundException {
+         Todo existing = Todo.findById(todoId);
+         existing.setTitle(todo.getTitle());
+         existing.setDescription(todo.getDescription());
+         existing.setComplete(todo.isComplete());
+         existing.setDueDate(todo.getDueDate());
+         existing.persistAndFlush();
+         return Response.ok(existing).build();
+       }
+     }
+     ```
+   * The DAO operations are implemented for us by the `PanacheEntity`. As a developer, all that we have to do is map the operations to methods which are exposed via the API
+1. Configure Quarkus DataSource and JPA
+   * Add the following to your `implementation/src/main/resources/application.properties` file
+     ```
+     quarkus.datasource.driver=org.h2.Driver
+     quarkus.datasource.url=jdbc:h2:mem:todo
+     quarkus.datasource.username=sa
+     quarkus.datasource.password=password
+     quarkus.hibernate-orm.database.generation = drop-and-create
+     
+     quarkus.http.cors=true
+     ```
+1. Let Quarkus know that we are including components from external libraries by using an empty `beans.xml` file in `implementation/src/main/resources/META-INF/beans.xml`
+1. Build the completed application using `4-build-implementation.sh`
+   * This actually runs:
+     * `./mvnw -pl frontend frontend:npm@quasar-build`
+     * `./mvnw -pl implementation,server clean package -DskipTests quarkus:dev`
+1. Open a browser to http://localhost:8080/
