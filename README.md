@@ -165,6 +165,7 @@ That's it! We've created our API Specification!!
      
      const apiClient = new DefaultApi(null, "http://localhost:8080");
      
+     export default {
      // ...SNIP...
      
        mounted() {
@@ -213,7 +214,9 @@ That's it! We've created our API Specification!!
            this.$data.showForm = !this.$data.showForm;
          }
        }
+     }
      // ...SNIP...
+   }
      ```
      * This client SDK is implemented in TypeScript and uses Axios (Promises-based Async API) to make the REST API calls with a very simple implementation workflow for the developer.
 1. Transpile the frontend using `3-build-frontend.sh`
