@@ -178,7 +178,7 @@ That's it! We've created our API Specification!!
              this.$data.todos = res.data;
              this.$q.loading.hide();
            }).catch(err => {
-             this.$q.loading.hide()
+             this.$q.loading.hide();
              this.$q.notify("An error occurred while loading data from the server: " + JSON.stringify(err));
            })
        },
