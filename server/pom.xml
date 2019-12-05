@@ -5,9 +5,10 @@
     <parent>
         <groupId>com.redhat.quarkus.demo</groupId>
         <artifactId>todo</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>todo-server</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>

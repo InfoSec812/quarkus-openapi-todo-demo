@@ -6,9 +6,10 @@
     <parent>
         <groupId>com.redhat.quarkus.demo</groupId>
         <artifactId>todo</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>todo-implementation</artifactId>
+    <version>${revision}</version>
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>

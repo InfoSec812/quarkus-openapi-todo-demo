@@ -5,9 +5,10 @@
     <parent>
         <groupId>com.redhat.quarkus.demo</groupId>
         <artifactId>todo</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>todo-jsclient</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
     <properties>
         <client.sdk.output>${project.build.directory}/generated-sources/client</client.sdk.output>
