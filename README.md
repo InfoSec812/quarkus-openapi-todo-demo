@@ -62,7 +62,7 @@ That's it! We've created our API Specification!!
 ## Generating your server code
 
 ### Method 1: Use Apicur.io
-1. In Apicu.io, navigate up to the APIs list
+1. In Apicur.io, navigate up to the APIs list
    * ![Apicur.io APIs list](doc_images/apicurio_apis_list.png)
 1. Click on the ellipses menu and select **Generate Project**
    * ![Apicur.io Generate Project](doc_images/apicurio_generate_project.png)
@@ -279,7 +279,7 @@ That's it! We've created our API Specification!!
    * The DAO operations are implemented for us by the `PanacheEntity`. As a developer, all that we have to do is map the operations to methods which are exposed via the API
 1. Configure Quarkus DataSource and JPA
    * Add the following to your `implementation/src/main/resources/application.properties` file
-     ```
+     ```properties
      quarkus.datasource.driver=org.h2.Driver
      quarkus.datasource.url=jdbc:h2:mem:todo
      quarkus.datasource.username=sa
