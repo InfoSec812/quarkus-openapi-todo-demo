@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.redhat.quarkus.demo</groupId>
+        <artifactId>todo</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>todo-frontend</artifactId>
+    <packaging>jar</packaging>
+    <properties>
+        <api.version>${parent.version}</api.version>
+        <vue.source>${project.basedir}/src/main/frontend</vue.source>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/frontend/node_modules</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>src/main/frontend</directory>
+                            <includes>
+                                <include>package-lock.json</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.8.0</version>
+                <executions>
+                    <!-- Install NodeJS & NPM -->
+                    <execution>
+                        <id>installNode</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                            <nodeVersion>${nodejs.version}</nodeVersion>
+                        </configuration>
+                    </execution>
+                    <!-- Set version on frontend NodeJS project -->
+                    <execution>
+                        <id>set-version</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>version --allow-same-version ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</arguments>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- Install the API Client dependencies -->
+                    <execution>
+                        <id>2-npm-install</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- Install the API Client dependencies -->
+                    <execution>
+                        <id>3-npm-install-client-sdk</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install --save-dev ${project.parent.basedir}/jsclient/target/generated-sources/client/</arguments>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- Build the single-page webapp for the frontend -->
+                    <execution>
+                        <id>quasar-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>none</phase>
+                        <configuration>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Run tests against the single-page webapp frontend -->
+                    <execution>
+                        <id>quasar-test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>none</phase>
+                        <configuration>
+                            <installDirectory>${project.parent.basedir}</installDirectory>
+                            <workingDirectory>${vue.source}</workingDirectory>
+                            <arguments>run test</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

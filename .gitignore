@@ -43,4 +43,7 @@ src/gen/**
 
 
 ## Ignore generated frontend code
-src/main/resources/META-INF/resources/**/*
+server/src/main/resources/META-INF/resources/**/*
+implementation/src/main/resources/META-INF/resources/**/*
+javaclient/openapi.yml
+node
