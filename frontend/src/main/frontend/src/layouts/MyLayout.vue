@@ -79,10 +79,6 @@
 </style>
 
 <script>
-import { DefaultApi } from 'todo-jsclient';
-
-const apiClient = new DefaultApi(null, "http://localhost:8080");
-
 export default {
   name: 'MyLayout',
 
@@ -98,42 +94,22 @@ export default {
     // When first starting, the application needs to load the initial data from the
     // server. This uses the loading indicator and the generated Axios client SDK
     // to load the data while showing the user a loading indicator
-    this.$q.loading.show();
-    apiClient.gettodos()
-      .then(res => {
-        this.$data.todos = res.data;
-        this.$q.loading.hide();
-      }).catch(err => {
-        this.$q.loading.hide()
-        this.$q.notify("An error occurred while loading data from the server: " + JSON.stringify(err));
-      })
+    this.$q.notify("Initial data loading not yet implemented");
   },
   methods: {
     // Given the index of an item to be deleted, make an API call to delete that ToDo
     deleteTodo: function(index) {
-      apiClient.deleteTodo(this.$data.todos[index].id)
-        .catch(err => {
-          this.$q.notify("An error occurred while deleting the Todo: " + JSON.stringify(err));
-        })
+      this.$q.notify("Deleting todos not yet implemented");
     },
     // Whenever a change is made to the data, this method is run to updated the
     // persisted data on the server
     updateTodo: function(index) {
-      apiClient.updateTodo(this.$data.todos[index].id, this.$data.todos[index])
-        .catch(err => {
-          this.$q.notify("An error occurred while updating the Todo: " + JSON.stringify(err));
-        })
+      this.$q.notify("Updating todos not yet implemented");
     },
     // When a new ToDo is submitted, this method is called to persist the ToDo
     // object to the server
     addTodo: function () {
-      apiClient.createTodo(this.$data.newTodo)
-        .then(res => {
-          this.$data.todos.push(res.data);
-        })
-        .catch(err => {
-          this.$q.notify("An error occurred while adding Todo: " + JSON.stringify(err));
-        })
+      this.$q.notify("Adding todos not yet implemented");
     },
     // A method to show or hide the new ToDo form
     toggleTodoForm: function () {
